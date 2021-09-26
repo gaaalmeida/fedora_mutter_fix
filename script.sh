@@ -1,3 +1,6 @@
+#!/bin/sh
+
+# Check if script is running in sudo
 if [ ! ${EUID} -eq 0 ]; then
     echo "This script needs administratives privileges! Run with sudo."
     exit
@@ -51,7 +54,6 @@ patch_mutter()
     sed -i '/XkbNewKeyboardNotify/d' ./meta-backend-x11.c &&
 
     # Compressing Mutter
-
     echo -ne "Compressing Mutter\033[0K\r"
     cd ../../../../ &&
     rm -rf mutter*.tar.xz &&
@@ -60,7 +62,7 @@ patch_mutter()
     # Building the RPM
     echo -ne "Building the patched RPM\033[0K\r"
     fedpkg --release $FEDORA_VERSION local &&
-   
+
     # Installing
     echo -ne "Installing patched mutter\033[0K\r"
     cd x86_64/ &&
@@ -70,7 +72,6 @@ patch_mutter()
 # Check if has a update available
 
 dnf check-update -q mutter &> /dev/null
-
 if [ $? -eq 0 ]; then
     if is_patched; then
         echo "The package is up to date and patched"
